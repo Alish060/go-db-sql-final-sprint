@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -47,6 +48,7 @@ func TestAddGetDelete(t *testing.T) {
 	// проверьте, что значения всех полей в полученном объекте совпадают со значениями полей в переменной parcel
 	parcelInDB, err := store.Get(number)
 	require.NoError(t, err)
+	//require.Equal(t, parcel.Number, parcelInDB.Number)
 	require.Equal(t, parcel.Client, parcelInDB.Client)
 	require.Equal(t, parcel.Status, parcelInDB.Status)
 	require.Equal(t, parcel.Address, parcelInDB.Address)
@@ -81,8 +83,8 @@ func TestSetAddress(t *testing.T) {
 	// check
 	// получите добавленную посылку и убедитесь, что адрес обновился
 	parcelInDB, err := store.Get(number)
-	require.NoError(t, err)
-	require.Equal(t, newAddress, parcelInDB.Address)
+	assert.NoError(t, err)
+	assert.Equal(t, newAddress, parcelInDB.Address)
 }
 
 // TestSetStatus проверяет обновление статуса
@@ -105,8 +107,8 @@ func TestSetStatus(t *testing.T) {
 	// check
 	// получите добавленную посылку и убедитесь, что статус обновился
 	parcelInDB, err := store.Get(number)
-	require.NoError(t, err)
-	require.Equal(t, ParcelStatusDelivered, parcelInDB.Status)
+	assert.NoError(t, err)
+	assert.Equal(t, ParcelStatusDelivered, parcelInDB.Status)
 }
 
 // TestGetByClient проверяет получение посылок по идентификатору клиента
@@ -143,8 +145,8 @@ func TestGetByClient(t *testing.T) {
 
 	// get by client
 	storedParcels, err := store.GetByClient(client) // получите список посылок по идентификатору клиента, сохранённого в переменной client
-	require.NoError(t, err)
-	require.Equal(t, len(parcels), len(storedParcels))
+	assert.NoError(t, err)
+	assert.Len(t, parcels, len(storedParcels))
 	// убедитесь в отсутствии ошибки
 	// убедитесь, что количество полученных посылок совпадает с количеством добавленных
 
@@ -154,7 +156,7 @@ func TestGetByClient(t *testing.T) {
 		// убедитесь, что все посылки из storedParcels есть в parcelMap
 		// убедитесь, что значения полей полученных посылок заполнены верно
 		expectedParcel, ok := parcelMap[parcel.Number]
-		require.True(t, ok)
-		require.Equal(t, expectedParcel, parcel)
+		assert.True(t, ok)
+		assert.Equal(t, expectedParcel, parcel)
 	}
 }
